@@ -28,9 +28,7 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			//update position, etc.
-			if (gameView.getUpPressed()) {
-				gameView.setY(gameView.getY() - 10);
-			}
+			
 			gameView.invalidate();
 			gameHandler.postDelayed(this, secondsPerFrame);//do it again 
 		}
