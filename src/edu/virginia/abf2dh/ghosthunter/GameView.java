@@ -2,6 +2,7 @@ package edu.virginia.abf2dh.ghosthunter;
 
 import java.util.ArrayList;
 import java.util.Map;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,15 +21,15 @@ public class GameView extends View {
 	
 	//Sets up the ghosts and the user. 
 	private ArrayList<Ghost> ghosts;
-		Ghost ghost1 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost2 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost3 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost4 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost5 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost6 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost7 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost8 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
-		Ghost ghost9 = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
+		Ghost ghost1 = new Ghost(25 + (float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost2 = new Ghost(25 + (float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost3 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost4 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost5 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost6 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost7 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost8 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost9 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
 	private User user = new User(this);
 
 	//Delay - helps regulate the random movement of the ghosts.
@@ -40,7 +41,7 @@ public class GameView extends View {
 	//kill - bitmap of Kill Mode button.
 	private Bitmap kill =(BitmapFactory.decodeResource(this.getResources(), R.drawable.killoff));
 	
-	//private int killCount;
+	private int killCount;
 	
 	
 	//Constructors
@@ -62,7 +63,7 @@ public class GameView extends View {
 	@Override
 	public void onDraw(Canvas canvas) {
 		
-		//killCount = 2;
+		killCount = 5;
 		
 		//Adds ghosts to ghost array. 
 		ghosts = new ArrayList<Ghost>();
@@ -76,12 +77,7 @@ public class GameView extends View {
 			ghosts.add(ghost8);
 			ghosts.add(ghost9);
 		
-		//Attempt to regenerate ghosts after killed (didn't work)
-		/*
-		for (int i = 0; i<killCount; i++){
-			ghosts.add(new Ghost((float)Math.random()*700,(float) Math.random()*700, this));
-		}
-		*/
+		
 		
 		//Draws the user. 
 		canvas.drawBitmap(user.getBitmap(), user.getX(), user.getY() , new Paint());
@@ -102,9 +98,17 @@ public class GameView extends View {
 			//Checks for user-ghost intersection. 
 			//Attack method in user will either cause user or ghost to die.
 			
+			if (user.isClose(g)){
+				user.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.deadface));
+			}
+			
+			else
+				user.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.smileyface));
+			
 			if(user.intersects(g, this)){
 				user.attack(g, this);
 			}
+			
 			
 			//Sets random x and y coordinates for ghosts. 
 			randomMovement(g, delay);
@@ -115,6 +119,20 @@ public class GameView extends View {
 	
 		invalidate();
 	}
+	
+	//Generate random number of ghosts
+	
+	/*
+	public void generateGhost()
+	{
+		for (int i = 0; i<5; i++){
+		
+		//Attempt to regenerate ghosts after killed (didn't work)
+		Ghost g = new Ghost((float)Math.random()*700,(float) Math.random()*700, this);
+		ghosts.add(g);
+		}
+	}
+	*/
 	
 	//Sets the button to corresponding kill mode. 
 	public void setKill(Boolean b){
@@ -168,7 +186,7 @@ public class GameView extends View {
 				float ghostXBound = g.getX() + g.getWidth();
 				float ghostYBound = g.getY() + g.getHeight();
 				
-				if (xCord>g.getX() && xCord<ghostXBound && yCord>g.getY() && yCord<ghostYBound){
+				if (xCord>g.getX() && xCord<ghostXBound && yCord>g.getY() && yCord<ghostYBound && g.isAlive()){
 					g.die(this);
 					//killCount++;
 					

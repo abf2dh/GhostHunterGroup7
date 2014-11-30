@@ -11,6 +11,7 @@ public class Ghost implements Collideable{
 	private float y;
 	private float width;
 	private RectF bounds;
+	private RectF proximity;
 	private float height;
 	private Bitmap b;
 	private boolean isAlive;
@@ -23,6 +24,7 @@ public class Ghost implements Collideable{
 	public void setX(float x) {
 		this.x = x;
 		bounds.set(this.x, this.y, this.x+width, this.y+height);
+		proximity.set(this.x+25, this.y+25, this.x+width+25, this.y+height+25); 
 	}
 
 	public float getY() {
@@ -32,6 +34,7 @@ public class Ghost implements Collideable{
 	public void setY(float y) {
 		this.y = y;
 		bounds.set(this.x, this.y, this.x+width, this.y+height);
+		proximity.set(this.x+25, this.y+25, this.x+width+25, this.y+height+25); 
 	}
 
 	public float getWidth() {
@@ -71,13 +74,16 @@ public class Ghost implements Collideable{
 		return b;
 	}
 	
-	
+	public RectF getProximity() {
+		return proximity;
+	}
 	
 	@Override
 	public boolean intersects(Collideable c, GameView v) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
 
 	public Ghost(float x, float y, View v) {
 		super();
@@ -87,6 +93,7 @@ public class Ghost implements Collideable{
 		this.width = b.getHeight(); 
 		this.height = b.getWidth();
 		this.bounds = new RectF(x,y, x+width, y+height);
+		this.proximity = new RectF(x+25, y+25, x+width+25, y+height+25); 
 		
 		this.isAlive = true;
 		this.isCollected = false;
@@ -103,8 +110,9 @@ public class Ghost implements Collideable{
 	}
 	
 	
-	public void erase(View v){
+	public void erase(View v, User u){
 		this.isCollected = true;
+		u.addPoints();
 		b = BitmapFactory.decodeResource(v.getResources(), R.drawable.blank);
 	}
 
@@ -112,6 +120,7 @@ public class Ghost implements Collideable{
 	public RectF getBounds() {
 		return bounds;
 	}
+
 	
 
 }

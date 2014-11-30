@@ -8,5 +8,5 @@ public interface Collideable {
 	public float getX();
 	public float getY();
 	public RectF getBounds();
-	
+
 }
