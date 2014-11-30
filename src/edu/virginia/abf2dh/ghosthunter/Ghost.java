@@ -11,6 +11,10 @@ public class Ghost implements Collideable{
 	private float y;
 	private float width;
 	private RectF bounds;
+	private float height;
+	private Bitmap b;
+	private boolean isAlive;
+	private boolean isCollected;
 	
 	public float getX() {
 		return x;
@@ -54,15 +58,20 @@ public class Ghost implements Collideable{
 	public void setAlive(boolean isAlive) {
 		this.isAlive = isAlive;
 	}
+	
+	public boolean isCollected(){
+		return isCollected;
+	}
+	
+	public void setCollected(boolean isCollected){
+		this.isCollected = isCollected;
+	}
 
 	public Bitmap getBitmap() {
 		return b;
 	}
 	
-	private float height;
 	
-	private Bitmap b;
-	private boolean isAlive;
 	
 	@Override
 	public boolean intersects(Collideable c, GameView v) {
@@ -80,6 +89,7 @@ public class Ghost implements Collideable{
 		this.bounds = new RectF(x,y, x+width, y+height);
 		
 		this.isAlive = true;
+		this.isCollected = false;
 	}
 
 	
@@ -87,14 +97,14 @@ public class Ghost implements Collideable{
 		
 		b = BitmapFactory.decodeResource(v.getResources(), R.drawable.coins);
 		isAlive = false;
+		this.isCollected = false;
 		
 	
 	}
 	
-	public void move(){
-		
-	}
+	
 	public void erase(View v){
+		this.isCollected = true;
 		b = BitmapFactory.decodeResource(v.getResources(), R.drawable.blank);
 	}
 

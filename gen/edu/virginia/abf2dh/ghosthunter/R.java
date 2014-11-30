@@ -1635,13 +1635,14 @@ containing a value of this type.
         public static final int abc_textfield_search_material=0x7f020032;
         public static final int blank=0x7f020033;
         public static final int coins=0x7f020034;
-        public static final int ghost=0x7f020035;
-        public static final int ic_launcher=0x7f020036;
-        public static final int killoff=0x7f020037;
-        public static final int killon=0x7f020038;
-        public static final int logo=0x7f020039;
-        public static final int mazelayout=0x7f02003a;
-        public static final int smileyface=0x7f02003b;
+        public static final int deadface=0x7f020035;
+        public static final int ghost=0x7f020036;
+        public static final int ic_launcher=0x7f020037;
+        public static final int killoff=0x7f020038;
+        public static final int killon=0x7f020039;
+        public static final int logo=0x7f02003a;
+        public static final int mazelayout=0x7f02003b;
+        public static final int smileyface=0x7f02003c;
     }
     public static final class id {
         public static final int action_bar=0x7f0a0033;

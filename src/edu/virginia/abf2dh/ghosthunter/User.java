@@ -9,6 +9,13 @@ public class User implements Collideable{
 	
 	private float x;
 	private RectF bounds;
+	private float y;
+	private float width;
+	private float height;
+	private Bitmap b;
+	private int points;
+	
+
 	
 	public float getX() {
 		return x;
@@ -49,17 +56,10 @@ public class User implements Collideable{
 		return b;
 	}
 
-	private float y;
-	private float width;
-	private float height;
-	private Bitmap b;
-	private int points;
-	
-
 	
 	public User(GameView v){
 		
-		b = this.drawBitmap(v);
+		b = BitmapFactory.decodeResource(v.getResources(), R.drawable.smileyface);
 		x = 25;
 		y = 25;
 		width = b.getWidth();
@@ -79,25 +79,21 @@ public class User implements Collideable{
 
 	
 	
-	public Bitmap drawBitmap(GameView v){
-		Bitmap b1 = BitmapFactory.decodeResource(v.getResources(), R.drawable.smileyface);
-		return b1;
-	}
-	
 	public void attack(Ghost g, GameView v) {
 		
 		if(g.isAlive()){
-			this.die();
+			this.die(v);
 		}
-		else{
+		else if (!g.isCollected()){
 			g.erase(v);
 			points+=10;
 			Toast.makeText(v.getContext(),"+10, Current Score = " + points, 
 	                Toast.LENGTH_SHORT).show();
 		}
+		
 	}
 	
-	public void die() {
+	public void die(GameView v) {
 		this.setX(25);
 		this.setY(25);
 		points-=10;
