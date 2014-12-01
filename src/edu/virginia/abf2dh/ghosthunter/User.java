@@ -14,6 +14,7 @@ public class User implements Collideable{
 	private float height;
 	private Bitmap b;
 	private int points;
+	private boolean stunned; 
 	
 
 	
@@ -60,7 +61,9 @@ public class User implements Collideable{
 		this.b = b; 
 	}
 
-	
+	public int getPoints(){
+		return points;
+	}
 	public User(GameView v){
 		
 		b = BitmapFactory.decodeResource(v.getResources(), R.drawable.smileyface);
@@ -82,17 +85,26 @@ public class User implements Collideable{
 	}
 
 	public boolean isClose(Ghost g){
-		if (RectF.intersects(g.getProximity(), this.bounds)){
+		if (g.isAlive() && RectF.intersects(g.getProximity(), this.bounds)){
 			return true;
 		}
 		else 
 			return false;
 	}
 	
-	public void attack(Ghost g, GameView v) {
+	public boolean attack(Ghost g, GameView v) {
 		
 		if(g.isAlive()){
+			
 			this.die(v);
+			return true;
+			
+			
+			/*
+			stunned = true;
+			//this.minusPoints();
+			this.die(v);
+			*/
 		}
 		
 		else if (!g.isCollected()){
@@ -103,15 +115,20 @@ public class User implements Collideable{
 			
 		}
 		
+		return false;
 	}
 	
 	public void die(GameView v) {
+		
+		//this.minusPoints();
+		//stunned = false;
 		this.setX(25);
 		this.setY(25);
 		
-		this.minusPoints();
-		Toast.makeText(v.getContext(),"You died! Minus 10 Points. Your current score is: " + points, 
-                Toast.LENGTH_SHORT).show();
+		
+		
+		
+		
 		
 	}
 
@@ -122,13 +139,15 @@ public class User implements Collideable{
 	}
 	
 	public void addPoints(){
-		points+=10;
+		points+=30;
 		
 		
 	}
 	
 	public void minusPoints(){
-		points-=10;
+		
+			points-=10;
+	
 	}
 
 }

@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
+		
 		backgroundmusic = MediaPlayer.create(MainActivity.this, R.raw.ghostmusic);			
 		backgroundmusic.setLooping(true);
 		backgroundmusic.start();

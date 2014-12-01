@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -21,15 +22,15 @@ public class GameView extends View {
 	
 	//Sets up the ghosts and the user. 
 	private ArrayList<Ghost> ghosts;
-		Ghost ghost1 = new Ghost(25 + (float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost2 = new Ghost(25 + (float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost3 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost4 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost5 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost6 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost7 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost8 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
-		Ghost ghost9 = new Ghost(25 +(float)Math.random()*700,25 +(float) Math.random()*700, this);
+		Ghost ghost1 = new Ghost(100 + (float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost2 = new Ghost(100 + (float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost3 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost4 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost5 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost6 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost7 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost8 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
+		Ghost ghost9 = new Ghost(100 +(float)Math.random()*700,100 +(float) Math.random()*700, this);
 	private User user = new User(this);
 
 	//Delay - helps regulate the random movement of the ghosts.
@@ -43,6 +44,8 @@ public class GameView extends View {
 	
 	private int killCount;
 	
+	//boolean close - sets user icon to blue if close to ghost
+	private boolean close;
 	
 	//Constructors
 	public GameView(Context context) {
@@ -62,7 +65,7 @@ public class GameView extends View {
 	
 	@Override
 	public void onDraw(Canvas canvas) {
-		
+		close = false; 
 		killCount = 5;
 		
 		//Adds ghosts to ghost array. 
@@ -89,7 +92,10 @@ public class GameView extends View {
 		//Increments everytime onDraw is called.
 		delay++;
 		
+		//generateGhost();
 		//Draws the ghosts. 
+		boolean stunned = false;
+		
 		for(Ghost g: ghosts)
 		{
 			
@@ -98,16 +104,15 @@ public class GameView extends View {
 			//Checks for user-ghost intersection. 
 			//Attack method in user will either cause user or ghost to die.
 			
-			if (user.isClose(g)){
-				user.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.deadface));
+			if(user.isClose(g)){
+				close = true;
 			}
 			
-			else
-				user.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.smileyface));
 			
 			if(user.intersects(g, this)){
-				user.attack(g, this);
+				stunned = user.attack(g, this);
 			}
+			
 			
 			
 			//Sets random x and y coordinates for ghosts. 
@@ -115,14 +120,57 @@ public class GameView extends View {
 			
 		}
 		
+		if (close){
+			user.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.deadface));
+		}
 		
+		else 
+			user.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.smileyface));
 	
+		//Subtracts points
+		
+		if(stunned == true){
+			user.minusPoints();
+			Toast.makeText(this.getContext(),"You died! Minus 10 Points. Your current score is: " + user.getPoints(), 
+	                Toast.LENGTH_SHORT).show();
+			stunned = false;
+		}
+		
+		boolean finished = true;
+		for(Ghost g: ghosts)
+		{
+			 if (!g.isCollected())
+				 finished = false;
+		}
+		
+		final GameView currentView = this;
+		if (finished == true){
+			Toast.makeText(this.getContext(),"You collected all the coins! Current score = " + user.getPoints() + ". Ghosts regenerating in 5 seconds.", 
+	                Toast.LENGTH_SHORT).show();
+			
+			new Handler().postDelayed(new Runnable(){
+				  public void run(){
+					  for(Ghost g: ghosts)
+						{
+							g.revive(currentView);
+						}  
+				 }
+				}, 5000);
+			
+			finished = false;
+			
+			/*
+			  Toast.makeText(this.getContext(),"Game Over! Total Score: " + user.getPoints(), 
+			 
+	                Toast.LENGTH_LONG).show();
+	                */
+		}
 		invalidate();
 	}
 	
 	//Generate random number of ghosts
 	
-	/*
+	
 	public void generateGhost()
 	{
 		for (int i = 0; i<5; i++){
@@ -132,7 +180,7 @@ public class GameView extends View {
 		ghosts.add(g);
 		}
 	}
-	*/
+	
 	
 	//Sets the button to corresponding kill mode. 
 	public void setKill(Boolean b){
@@ -239,8 +287,8 @@ public class GameView extends View {
 		
 				}
 				else{
-					x = (float) (Math.random()*700);
-					y = (float) (Math.random()*700);
+					x = 100 + (float) (Math.random()*700);
+					y = 100 + (float) (Math.random()*700);
 				}
 				
 		}

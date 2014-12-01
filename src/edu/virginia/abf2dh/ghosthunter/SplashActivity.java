@@ -28,7 +28,7 @@ public class SplashActivity extends ActionBarActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		
-		handler.postDelayed(launcher, 10000);
+		handler.postDelayed(launcher, 5000);
 		
 		RelativeLayout splashLayout = (RelativeLayout) findViewById(R.id.layout_splash);
 		splashLayout.setOnTouchListener(new View.OnTouchListener() {
